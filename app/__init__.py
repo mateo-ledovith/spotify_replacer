@@ -1,26 +1,25 @@
+import os
 from flask import Flask
 from flask_socketio import SocketIO
-import os
 from dotenv import load_dotenv
 
-load_dotenv()  # Load the environment variables from the .env fil
+# Load environment variables from the .env file
+load_dotenv()
 
-socketio = SocketIO()
-app = Flask(__name__)  # 💡 Crea la instancia de la app aquí
+# Create the Flask app instance
+app = Flask(__name__)
 
-# Configuración de la app
+# Configure the app
 app.config.update(
-    SECRET_KEY=os.environ.get('FLASK_SECRET_KEY'),
+    SECRET_KEY=os.environ.get('FLASK_SECRET_KEY', 'default_secret_key'),  # Default for security
     SPOTIFY_CLIENT_ID=os.environ.get('SPOTIFY_CLIENT_ID'),
     SPOTIFY_CLIENT_SECRET=os.environ.get('SPOTIFY_CLIENT_SECRET'),
-    DOWNLOADS_FOLDER = '/app/tmp/downloads'
+    DOWNLOADS_FOLDER=os.path.join(os.getcwd(), 'tmp', 'downloads'),  # Ensures compatibility
+    FFMPEG_PATH=os.environ.get('FFMPEG_PATH', '/usr/bin/ffmpeg'),  # Default for Linux
 )
 
-print(app.config['DOWNLOADS_FOLDER'])
+# Initialize Flask-SocketIO with the app
+socketio = SocketIO(app)
 
-socketio.init_app(app)
-
-# Importa las rutas para que se registren con `app.route()`
-from app import routes  # 💡 Se importa al final para evitar errores de importación
-
-
+# Import routes at the end to avoid circular imports
+from app import routes

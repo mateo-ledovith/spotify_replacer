@@ -11,20 +11,23 @@ def extract_tracks(data):
     '''
     tracks = []
 
-    # Extract track details from the items list
-    for item in data.get('items', []):
-        track = item.get('track', {})
+    # Extract track details from the 'items' list in the response data
+    # Using .get() to safely handle potential missing keys in the JSON response
+    for item in data.get('items', []):  
+        track = item.get('track', {})  # Get the 'track' dictionary for each item
         
-        # Extract main track info
+        # Extract track name, default to 'Unknown Track' if missing
         track_name = track.get('name', 'Unknown Track')
+        
+        # Extract album information, including album cover image URL
         album = track.get('album', {})
-        album_image_url = album.get('images', [{}])[0].get('url', None)
+        album_image_url = album.get('images', [{}])[0].get('url', None)  # Handle possible missing 'images' key
 
         # Extract the main artist's name (first in the list of artists)
         artists = track.get('artists', [])
         artist_name = artists[0].get('name', 'Unknown Artist') if artists else 'Unknown Artist'
 
-        # Append track details to the list
+        # Append the track details to the list
         tracks.append({
             'track_name': track_name,
             'artist': artist_name,

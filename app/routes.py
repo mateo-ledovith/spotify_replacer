@@ -3,7 +3,7 @@ import shutil
 import requests
 import urllib.parse
 from datetime import datetime
-from flask import redirect, request, session, render_template, url_for, send_file
+from flask import redirect, request, session, render_template, url_for, send_file, g
 from app.zip import create_zip
 from app import app, socketio
 from .downloads import download_youtube_media, find_youtube_link
@@ -27,9 +27,12 @@ SCOPE = 'playlist-read-private playlist-read-collaborative'
 @app.before_request
 def check_authentication():
     """Global authentication and token expiration check before each request."""
+    # Skip authentication check for specific endpoints
+    if getattr(g, 'skip_auth', False):
+        return None  # Just continue with the request handling
+    
     if not is_authenticated():
         return redirect(url_for('login'))
-    
     if is_token_expired():
         return redirect(url_for('refresh_token'))
 
@@ -38,11 +41,16 @@ def check_authentication():
 
 @app.route('/')
 def index():
+    g.skip_auth = True  # Skip authentication check for this route
+    
     return render_template('index.html')
 
 @app.route('/login')
 def login():
     """Redirect user to Spotify authorization page."""
+    
+    g.skip_auth = True  # Skip authentication check for this route
+    
     params = {
         'client_id': CLIENT_ID,
         'response_type': 'code',

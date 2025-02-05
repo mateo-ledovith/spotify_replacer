@@ -1,3 +1,3 @@
-.env                        # Ignore environment file
-enter_docker_terminal.sh    # Ignore enter_docker_terminal.sh
-.vscode                     # Ignore .vscode
+.env
+enter_docker_terminal.sh
+.vscode

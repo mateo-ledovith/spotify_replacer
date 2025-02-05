@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Spotify Downloader{% endblock %}
+
+{% block header_content %}
+    <p>Log in with your Spotify account to access your playlists and download your favorite tracks with ease.</p>
+    <a href="{{ url_for('login') }}">
+        <button class="login-button">Log in with Spotify</button>
+    </a>
+{% endblock %}
+
+{% block head %}
+    {{ super() }}  <!-- Preserves base.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}My Playlists{% endblock %}
+
+{% block header_title %}My Playlists{% endblock %}
+
+{% block header_content %}
+    <p>Select the playlist you want to download and hit the "Download" button.</p>
+{% endblock %}
+
+{% block head %}
+    {{ super() }}  <!-- Preserves base.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_playlists.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="playlist-container">
+    <form method="POST" action="{{ url_for('playlists') }}">
+        <ul class="playlist-list">
+            {% for playlist in playlists %}
+                <li>
+                    <input type="radio" name="playlist" value="{{ playlist.id }}" id="playlist-{{ loop.index }}">
+                    <label for="playlist-{{ loop.index }}">
+                        <img src="{{ playlist.images[0]['url'] }}" alt="{{ playlist.name }}" class="playlist-image">
+                        {{ playlist.name }}
+                    </label>
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit" class="download-button">Download</button>
+    </form>
+
+    {% if success %}
+        <p class="success-message">Download started for the selected playlist!</p>
+    {% endif %}
+</div>
+{% endblock %}

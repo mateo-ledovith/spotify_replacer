@@ -1,0 +1,23 @@
+header {
+    margin-top: 15rem;
+    margin-bottom: 4rem;
+}
+
+.login-button {
+    margin-top: 4rem;
+    padding: 1rem 2rem;
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 22rem;
+    height: 4rem;
+}
+
+.login-button:hover {
+    background-color: #14833b;
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Spotify Downloader{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <!-- Logo image -->
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.webp') }}">
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}
+        <h1>{% block header_title %}Spotify Downloader{% endblock %}</h1>
+        {% block header_content %}{% endblock %}
+        {% endblock %}
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}
+        <p><strong>Disclaimer:</strong> This app is not affiliated with Spotify.</p>
+        <p>&copy; 2025 Spotify Downloader. All rights reserved.</p>
+        {% endblock %}
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

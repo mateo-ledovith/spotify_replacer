@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Download Playlist{% endblock %}
+
+{% block header_title %}Download Playlist{% endblock %}
+
+{% block header_content %}
+    <p>Click the button below to start downloading your playlist. Progress will be shown below.</p>
+{% endblock %}
+
+{% block head %}
+    {{ super() }}  <!-- Preserves base.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_download_playlist.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="playlist-details">
+    {% if playlist_image_url %}
+        <img src="{{ playlist_image_url }}" alt="{{ playlist_name }}" class="playlist-image">
+    {% endif %}
+    <h2>{{ playlist_name }}</h2>
+</div>
+
+<form id="mainForm" method="POST">
+    <div id="progress-container" class="progress-container">
+        <div id="main-progress-bar" class="progress-bar"></div>
+    </div>
+    <button type="submit" class="btn btn-primary">Download Playlist</button>
+</form>
+
+<ul class="track-list">
+    {% for track in tracks %}
+        <li class="track-item">
+            <img src="{{ track.album_photo_url }}" alt="Album Cover" class="album-image">
+            <div class="track-info">
+                <p class="track-name">{{ track.track_name }}</p>
+                <p class="track-artist">by {{ track.artist }}</p>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
+
+<div id="successModal" class="success-modal">
+    <div class="modal-content">
+        <h2>🎉 Download Successful!</h2>
+        <p>Your playlist has been downloaded successfully.</p>
+        <button onclick="location.href='/'" class="btn">Return Home</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.socket.io/4.5.3/socket.io.min.js"></script>
+<script type="text/javascript">
+    window.onload = function() {
+        const socket = io('http://localhost:5000');  
+        let socketId = undefined;
+        // Capture the tracks data from Jinja template
+        const tracksData = JSON.parse('{{ tracks | tojson | safe }}');
+
+        socket.on('connect', function () {
+            console.log('Connected to server');
+            socketId = socket.id;
+        });
+
+        let mainProgressBar = document.getElementById('main-progress-bar');
+        let mainProgressContainer = document.getElementById('progress-container');
+
+        socket.on("update progress", function(percent) {
+            mainProgressBar.style.width = percent + "%";
+            mainProgressBar.setAttribute("aria-valuenow", percent);
+
+            // Si la barra llega al 100%, mostrar un efecto de finalización
+            if (percent >= 100) {
+                mainProgressContainer.classList.add("completed");
+            } else {
+                mainProgressContainer.classList.remove("completed");
+            }
+        });
+
+        let mainForm = document.getElementById('mainForm');
+        mainForm.onsubmit = function(event) {
+    event.preventDefault();
+    document.querySelector('button').disabled = true;
+    mainProgressBar.style.width = "0%";
+    mainProgressContainer.classList.remove("completed");
+    // Change the button text to show that the download is in progress
+    document.querySelector('button').innerText = 'Downloading...';
+
+    fetch('/download-playlist/progress/' + socketId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+            tracks: tracksData, 
+            playlist_name: '{{ playlist_name }}' 
+        })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        // Create download link
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '{{ playlist_name }}.zip';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        // Show success modal
+        document.getElementById('successModal').style.display = 'flex';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Download failed: ' + error.message);
+    });
+    };  
+};
+</script>
+{% endblock %}
+

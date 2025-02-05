@@ -3,7 +3,7 @@ import shutil
 import requests
 import urllib.parse
 from datetime import datetime
-from flask import redirect, request, jsonify, session, render_template, url_for, send_file
+from flask import redirect, request, session, render_template, url_for, send_file
 from app.zip import create_zip
 from app import app, socketio
 from .downloads import download_youtube_media, find_youtube_link
@@ -160,7 +160,7 @@ def download_playlist_progress(socketid):
         # Download tracks
         for index, track in enumerate(tracks):
             try:
-                youtube_link = find_youtube_link(f"{track['track_name']} {track['artist']}")
+                youtube_link = find_youtube_link(f"{track['track_name']} {track['artist']} audio")
                 download_youtube_media(youtube_link, temp_dir)
             except Exception as e:
                 app.logger.error(f"Failed to download {track['track_name']}: {str(e)}")

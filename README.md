@@ -8,7 +8,7 @@
 The repository can be cloned and run locally using the following steps:
 
 ```sh
-git clone https://github.com/your-username/spotify-replacer.git
+git clone https://github.com/mateo-ledovith/spotify-replacer.git
 cd spotify-replacer
 
 bash run_docker.sh

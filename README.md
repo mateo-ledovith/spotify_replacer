@@ -3,7 +3,7 @@
 **Spotify Replacer** is a web application that allows you to download the songs from a Spotify playlist quickly, efficiently, and easily — all for free.
 
 
-## 🏗️ Deployment
+## 🏗️ Usage
 
 The repository can be cloned and run locally using the following steps:
 
@@ -17,6 +17,23 @@ bash run_docker.sh
 Then, access the application in your browser at http://127.0.0.1:5000/.
 
 **Note:** To run this application, you must have **Docker** installed on your system. Please ensure that Docker is properly installed before proceeding with the deployment steps.
+
+## 🔧 Configuration
+
+Before running the application, you need to configure environment variables.  
+
+### 🎵 Obtain Spotify Credentials
+
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+2. Log in with your Spotify account.
+3. Click **"Create an App"** and provide a name and description.
+4. Once the app is created, navigate to the **Dashboard**, where you will find your `Client ID` and `Client Secret`.
+5. Copy these values and paste them into the `.env`, here´s an example:
+
+   ```ini
+   SPOTIFY_CLIENT_ID='abc123def456ghi789jkl012'
+   SPOTIFY_CLIENT_SECRET='mnop345qrs678tuv901wxyz234'
+   ```
 
 
 ## 🚀 How It Works
